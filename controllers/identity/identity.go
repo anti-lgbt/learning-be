@@ -75,8 +75,6 @@ func Register(c *fiber.Ctx) error {
 		Email:    params.Email,
 		Password: params.Password,
 		FullName: params.FullName,
-		State:    "active",
-		Role:     "member",
 	}
 	if result := config.DataBase.Create(&user); result.Error != nil {
 		return c.Status(500).JSON(types.Error{

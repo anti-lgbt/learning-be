@@ -28,22 +28,22 @@ func GetProducts(c *fiber.Ctx) error {
 	tx := config.DataBase
 
 	if len(params.Type) > 0 {
-		tx.Where("type = ?", params.Type)
+		tx = tx.Where("type = ?", params.Type)
 	}
 
 	if len(params.Name) > 0 {
-		tx.Where("type LIKE ?", "%"+params.Name+"%")
+		tx = tx.Where("product_type_id IN (SELECT \"id\" FROM \"product_type\" WHERE \"name\" LIKE ?)", "%"+params.Name+"%")
 	}
 
 	var products []*models.Product
-	tx.Find(&products)
+	tx.Preload("ProductType").Find(&products)
 
 	product_entities := make([]*entities.Product, 0)
 
 	for _, product := range products {
 		product_entities = append(product_entities, &entities.Product{
 			ID:                 product.ID,
-			Type:               product.Type,
+			Type:               product.ProductType.Name,
 			Name:               product.Name,
 			Price:              product.Price,
 			DiscountPercentage: product.DiscountPercentage,
@@ -67,7 +67,7 @@ func GetProduct(c *fiber.Ctx) error {
 	}
 
 	var product *models.Product
-	if result := config.DataBase.First(&product, "id = ?", id); result.Error != nil {
+	if result := config.DataBase.Preload("ProductType").First(&product, "id = ?", id); result.Error != nil {
 		return c.Status(500).JSON(types.Error{
 			Error: "Product tìm thấy product",
 		})
@@ -75,7 +75,7 @@ func GetProduct(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(entities.Product{
 		ID:                 product.ID,
-		Type:               product.Type,
+		Type:               product.ProductType.Name,
 		Name:               product.Name,
 		Description:        product.Description,
 		Price:              product.Price,

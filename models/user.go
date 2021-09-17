@@ -10,15 +10,16 @@ import (
 )
 
 type User struct {
-	ID        uint64
-	Email     string
-	Password  string
-	FullName  sql.NullString
-	Avatar    sql.NullString
-	State     types.UserState
-	Role      types.UserRole
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        uint64          `gorm:"primaryKey;autoIncrement;not null;index"`
+	Email     string          `gorm:"type:character varying(50);not null;index"`
+	Password  string          `gorm:"type:character varying(255);not null"`
+	FullName  sql.NullString  `gorm:"type:character varying(255);index"`
+	Avatar    sql.NullString  `gorm:"type:character varying(50)"`
+	State     types.UserState `gorm:"type:character varying(10);not null;index;default:active"`
+	Role      types.UserRole  `gorm:"type:character varying(10);not null;index;default:member"`
+	CreatedAt time.Time       `gorm:"type:timestamp(0);not null;index"`
+	UpdatedAt time.Time       `gorm:"type:timestamp(0);not null;index"`
+	Comments  []*Comment      `gorm:"constraint:OnDelete:CASCADE"`
 }
 
 func HashPassword(password string) (string, error) {
