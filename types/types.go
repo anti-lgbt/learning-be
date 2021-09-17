@@ -1,15 +1,19 @@
 package types
 
-type UserState string;
+type UserState string
 
 var (
-	UserStateActive = "active"
-	UserStateDeleted = "deleted"
+	UserStateActive  UserRole = "active"
+	UserStateDeleted UserRole = "deleted"
 )
 
-type UserRole string;
+type UserRole string
 
 var (
-	UserRoleAdmin = "admin"
-	UserRoleMember = "member"
+	UserRoleAdmin  UserRole = "admin"
+	UserRoleMember UserRole = "member"
 )
+
+type Error struct {
+	Error string
+}
