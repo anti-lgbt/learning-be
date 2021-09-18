@@ -17,6 +17,7 @@ func SetupRouter() *fiber.App {
 	{
 		api_v2_public.Get("/products", public.GetProducts)
 		api_v2_public.Get("/products/:id", public.GetProduct)
+		api_v2_public.Get("/products/:id/image", public.GetProductImage)
 		api_v2_public.Get("/products/:product_id/comments", public.GetComments)
 	}
 

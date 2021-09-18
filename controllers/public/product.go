@@ -112,3 +112,23 @@ func GetProduct(c *fiber.Ctx) error {
 		UpdatedAt:          product.UpdatedAt,
 	})
 }
+
+func GetProductImage(c *fiber.Ctx) error {
+	id, err := c.ParamsInt("id")
+	if err != nil {
+		return c.Status(500).JSON(types.Error{
+			Error: "Product id phải là số nguyên",
+		})
+	}
+
+	var product *models.Product
+	if result := config.DataBase.Preload("ProductType").First(&product, "id = ?", id); result.Error != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: "Product tìm thấy product",
+		})
+	}
+
+	c.Attachment(product.Image)
+
+	return c.SendStatus(200)
+}
