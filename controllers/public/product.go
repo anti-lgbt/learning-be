@@ -3,6 +3,7 @@ package public
 import (
 	"github.com/anti-lgbt/learning-be/config"
 	"github.com/anti-lgbt/learning-be/controllers/entities"
+	"github.com/anti-lgbt/learning-be/controllers/helpers"
 	"github.com/anti-lgbt/learning-be/controllers/queries"
 	"github.com/anti-lgbt/learning-be/models"
 	"github.com/anti-lgbt/learning-be/types"
@@ -17,12 +18,10 @@ func GetProducts(c *fiber.Ctx) error {
 		})
 	}
 
-	if params.Page == 0 {
-		params.Page = 1
-	}
-
-	if params.Limit == 0 {
-		params.Limit = 100
+	if err := helpers.Vaildate(params); err != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: err.Error(),
+		})
 	}
 
 	tx := config.DataBase
@@ -68,7 +67,7 @@ func GetProduct(c *fiber.Ctx) error {
 
 	var product *models.Product
 	if result := config.DataBase.Preload("ProductType").First(&product, "id = ?", id); result.Error != nil {
-		return c.Status(500).JSON(types.Error{
+		return c.Status(422).JSON(types.Error{
 			Error: "Product tìm thấy product",
 		})
 	}

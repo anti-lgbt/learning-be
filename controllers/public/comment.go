@@ -31,20 +31,12 @@ func GetComments(c *fiber.Ctx) error {
 		})
 	}
 
-	if params.Page == 0 {
-		params.Page = 1
-	}
-
-	if params.Limit == 0 {
-		params.Limit = 100
-	}
-
-	tx := config.DataBase.Where("product_id = ?", product.ID)
-
-	tx = tx.Offset(params.Page*params.Limit - params.Limit).Limit(params.Limit)
-
 	var comments []*models.Comment
-	tx.Find(&comments)
+	config.DataBase.
+		Where("product_id = ?", product.ID).
+		Offset(params.Page*params.Limit - params.Limit).
+		Limit(params.Limit).
+		Find(&comments)
 
 	return c.Status(200).JSON(comments)
 }

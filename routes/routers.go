@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"github.com/anti-lgbt/learning-be/controllers/admin"
 	"github.com/anti-lgbt/learning-be/controllers/identity"
 	"github.com/anti-lgbt/learning-be/controllers/public"
 	"github.com/anti-lgbt/learning-be/routes/middlewares"
@@ -27,7 +28,19 @@ func SetupRouter() *fiber.App {
 
 	api_v2_admin := app.Group("/api/v2/admim", middlewares.Authenticate, middlewares.Admin)
 	{
-		_ = api_v2_admin
+		api_v2_admin.Get("/products", admin.GetProducts)
+		api_v2_admin.Get("/products/:id", admin.GetProduct)
+		api_v2_admin.Post("/products", admin.CreateProduct)
+		api_v2_admin.Put("/products", admin.UpdateProduct)
+		api_v2_admin.Delete("/products/:id", admin.DeleteProduct)
+
+		api_v2_admin.Get("/comments", admin.GetComments)
+		api_v2_admin.Delete("/comments/:id", admin.DeleteComment)
+
+		api_v2_admin.Get("/users", admin.GetUsers)
+		api_v2_admin.Post("/users", admin.CreateUser)
+		api_v2_admin.Put("/users", admin.UpdateUser)
+		api_v2_admin.Delete("/users/:id", admin.DeleteUser)
 	}
 
 	return app

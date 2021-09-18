@@ -3,8 +3,8 @@ package types
 type UserState string
 
 var (
-	UserStateActive  UserRole = "active"
-	UserStateDeleted UserRole = "deleted"
+	UserStateActive  UserState = "active"
+	UserStateDeleted UserState = "deleted"
 )
 
 type UserRole string

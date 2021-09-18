@@ -9,9 +9,18 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+type AuthPayload struct {
+	Email    string `json:"email" validate:"email|required"`
+	Password string `json:"password" validate:"min:8|max:26|required"`
+}
+
 type LoginPayload struct {
-	Email    string
-	Password string
+	AuthPayload
+}
+
+type RegisterPayload struct {
+	FullName sql.NullString `json:"full_name"`
+	AuthPayload
 }
 
 func Login(c *fiber.Ctx) error {
@@ -44,12 +53,6 @@ func Login(c *fiber.Ctx) error {
 	return c.Status(200).JSON(user)
 }
 
-type RegisterPayload struct {
-	FullName sql.NullString
-	Email    string
-	Password string
-}
-
 func Register(c *fiber.Ctx) error {
 	var params = new(RegisterPayload)
 	if err := c.BodyParser(params); err != nil {
@@ -71,11 +74,19 @@ func Register(c *fiber.Ctx) error {
 		})
 	}
 
+	hashed, err := models.HashPassword(params.Password)
+	if err != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: "Không xác minh được password",
+		})
+	}
+
 	user := &models.User{
 		Email:    params.Email,
-		Password: params.Password,
+		Password: hashed,
 		FullName: params.FullName,
 	}
+
 	if result := config.DataBase.Create(&user); result.Error != nil {
 		return c.Status(500).JSON(types.Error{
 			Error: "Không thể tạo user",
