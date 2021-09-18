@@ -32,7 +32,7 @@ func GetProducts(c *fiber.Ctx) error {
 		})
 	}
 
-	tx := config.DataBase
+	tx := config.DataBase.Offset(params.Page*params.Limit - params.Limit).Limit(params.Limit)
 
 	if len(params.OrderBy) > 0 {
 		tx = tx.Order(params.OrderBy + " " + string(params.Ordering))
