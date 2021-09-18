@@ -45,6 +45,7 @@ require (
 )
 
 require (
+	github.com/creasty/defaults v1.5.2
 	github.com/friendsofgo/errors v0.9.2 // indirect
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/volatiletech/inflect v0.0.1 // indirect

@@ -7,12 +7,19 @@ import (
 	"github.com/anti-lgbt/learning-be/controllers/queries"
 	"github.com/anti-lgbt/learning-be/models"
 	"github.com/anti-lgbt/learning-be/types"
+	"github.com/creasty/defaults"
 	"github.com/gofiber/fiber/v2"
 )
 
 func GetProducts(c *fiber.Ctx) error {
 	var params = new(queries.ProductQuery)
 	if err := c.QueryParser(params); err != nil {
+		return c.Status(500).JSON(types.Error{
+			Error: "Không thể xác minh được query",
+		})
+	}
+
+	if err := defaults.Set(params); err != nil {
 		return c.Status(500).JSON(types.Error{
 			Error: "Không thể xác minh được query",
 		})

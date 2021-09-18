@@ -1,8 +1,8 @@
 package queries
 
 type Pagination struct {
-	Limit int `query:"limit" validate:"uint|default:100"`
-	Page  int `query:"page" validate:"uint|default:1"`
+	Limit int `query:"limit" validate:"uint" default:"100"`
+	Page  int `query:"page" validate:"uint" default:"1"`
 }
 
 type Period struct {
