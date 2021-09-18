@@ -15,7 +15,7 @@ func SetupRouter() *fiber.App {
 
 	api_v2_public := app.Group("/api/v2/public")
 	{
-		api_v2_public.Get("/products", public.GetComments)
+		api_v2_public.Get("/products", public.GetProducts)
 		api_v2_public.Get("/products/:id", public.GetProduct)
 		api_v2_public.Get("/products/:product_id/comments", public.GetComments)
 	}

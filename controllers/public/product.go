@@ -27,11 +27,11 @@ func GetProducts(c *fiber.Ctx) error {
 	tx := config.DataBase
 
 	if len(params.Type) > 0 {
-		tx = tx.Where("type = ?", params.Type)
+		tx = tx.Where("product_type_id IN (SELECT \"id\" FROM \"product_type\" WHERE \"name\" LIKE ?)", "%"+params.Name+"%")
 	}
 
 	if len(params.Name) > 0 {
-		tx = tx.Where("product_type_id IN (SELECT \"id\" FROM \"product_type\" WHERE \"name\" LIKE ?)", "%"+params.Name+"%")
+		tx = tx.Where("name LIKE ?", "%"+params.Name+"%")
 	}
 
 	var products []*models.Product
