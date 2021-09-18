@@ -12,9 +12,9 @@ import (
 
 func GetProducts(c *fiber.Ctx) error {
 	var params = new(queries.ProductQuery)
-	if err := c.BodyParser(params); err != nil {
+	if err := c.QueryParser(params); err != nil {
 		return c.Status(500).JSON(types.Error{
-			Error: "Không thể xác minh được body",
+			Error: "Không thể xác minh được query",
 		})
 	}
 
