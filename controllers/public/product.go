@@ -128,7 +128,5 @@ func GetProductImage(c *fiber.Ctx) error {
 		})
 	}
 
-	c.Attachment(product.Image)
-
-	return c.SendStatus(200)
+	return c.SendFile(product.Image, false)
 }
