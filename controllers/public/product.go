@@ -34,6 +34,14 @@ func GetProducts(c *fiber.Ctx) error {
 
 	tx := config.DataBase
 
+	if len(params.OrderBy) > 0 {
+		tx = tx.Order(params.OrderBy + " " + string(params.Ordering))
+	}
+
+	if params.Discounting {
+		tx = tx.Where("discount_percentage > 0")
+	}
+
 	if params.Special {
 		tx = tx.Where("special = true")
 	}

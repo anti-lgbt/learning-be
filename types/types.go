@@ -17,3 +17,10 @@ var (
 type Error struct {
 	Error string
 }
+
+type Ordering string
+
+var (
+	OrderingAsc  Ordering = "asc"
+	OrderingDesc Ordering = "desc"
+)
