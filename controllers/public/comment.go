@@ -1,6 +1,7 @@
 package public
 
 import (
+	"github.com/creasty/defaults"
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/anti-lgbt/learning-be/config"
@@ -21,6 +22,12 @@ func GetComments(c *fiber.Ctx) error {
 	if err := c.BodyParser(params); err != nil {
 		return c.Status(500).JSON(types.Error{
 			Error: "Không thể xác minh được body",
+		})
+	}
+
+	if err := defaults.Set(params); err != nil {
+		return c.Status(500).JSON(types.Error{
+			Error: "Không thể xác minh được query",
 		})
 	}
 
