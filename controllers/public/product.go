@@ -80,6 +80,9 @@ func GetProduct(c *fiber.Ctx) error {
 		})
 	}
 
+	product.ViewCount++
+	config.DataBase.Save(&product)
+
 	return c.Status(200).JSON(entities.Product{
 		ID:   product.ID,
 		Type: product.ProductType.Name,
