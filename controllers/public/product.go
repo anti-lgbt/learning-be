@@ -9,6 +9,7 @@ import (
 	"github.com/anti-lgbt/learning-be/types"
 	"github.com/creasty/defaults"
 	"github.com/gofiber/fiber/v2"
+	"github.com/volatiletech/null"
 )
 
 func GetProducts(c *fiber.Ctx) error {
@@ -80,10 +81,13 @@ func GetProduct(c *fiber.Ctx) error {
 	}
 
 	return c.Status(200).JSON(entities.Product{
-		ID:                 product.ID,
-		Type:               product.ProductType.Name,
-		Name:               product.Name,
-		Description:        product.Description,
+		ID:   product.ID,
+		Type: product.ProductType.Name,
+		Name: product.Name,
+		Description: null.String{
+			String: product.Description.String,
+			Valid:  product.Description.Valid,
+		},
 		Price:              product.Price,
 		DiscountPercentage: product.DiscountPercentage,
 		StockLeft:          product.StockLeft,
