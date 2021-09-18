@@ -34,6 +34,10 @@ func GetProducts(c *fiber.Ctx) error {
 
 	tx := config.DataBase
 
+	if params.Special {
+		tx = tx.Where("special = true")
+	}
+
 	if len(params.Type) > 0 {
 		tx = tx.Where("product_type_id IN (SELECT \"id\" FROM \"product_type\" WHERE \"name\" LIKE ?)", "%"+params.Name+"%")
 	}
