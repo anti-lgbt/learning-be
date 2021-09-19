@@ -4,6 +4,7 @@ import (
 	"github.com/anti-lgbt/learning-be/controllers/admin"
 	"github.com/anti-lgbt/learning-be/controllers/identity"
 	"github.com/anti-lgbt/learning-be/controllers/public"
+	"github.com/anti-lgbt/learning-be/controllers/resource"
 	"github.com/anti-lgbt/learning-be/routes/middlewares"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -26,6 +27,13 @@ func SetupRouter() *fiber.App {
 	{
 		api_v2_identity.Post("/login", identity.Login)
 		api_v2_identity.Post("/register", identity.Register)
+	}
+
+	api_v2_resource := app.Group("/api/v2/resource", middlewares.Authenticate)
+	{
+		api_v2_resource.Get("/users/me", resource.GetUser)
+		api_v2_resource.Put("/users/password", resource.UpdatePassword)
+		api_v2_resource.Put("/users", resource.UpdateUser)
 	}
 
 	api_v2_admin := app.Group("/api/v2/admim", middlewares.Authenticate, middlewares.Admin)
