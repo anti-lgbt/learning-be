@@ -15,7 +15,7 @@ func Authenticate(c *fiber.Ctx) error {
 		})
 	}
 
-	email := session.Get("email").(*string)
+	email := session.Get("email")
 	if email == nil {
 		return c.Status(500).JSON(types.Error{
 			Error: "Session không tồn tại",
@@ -23,7 +23,7 @@ func Authenticate(c *fiber.Ctx) error {
 	}
 
 	var user *models.User
-	if result := config.DataBase.First(&user, "email = ?", email); result.Error != nil {
+	if result := config.DataBase.First(&user, "email = ?", email.(string)); result.Error != nil {
 		return c.Status(500).JSON(types.Error{
 			Error: "Session không tồn tại",
 		})
