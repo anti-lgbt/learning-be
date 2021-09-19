@@ -15,7 +15,7 @@ var (
 )
 
 type Error struct {
-	Error string
+	Error string `json:"error"`
 }
 
 type Ordering string
