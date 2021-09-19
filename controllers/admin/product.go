@@ -222,7 +222,14 @@ func CreateProductType(c *fiber.Ctx) error {
 		})
 	}
 
-	product_type := &models.ProductType{
+	var product_type *models.ProductType
+	if result := config.DataBase.First(&product_type, "name = ?", params.Name); result.Error == nil {
+		return c.Status(422).JSON(types.Error{
+			Error: "Loại hàng này đã tồn tại",
+		})
+	}
+
+	product_type = &models.ProductType{
 		Name: params.Name,
 	}
 
