@@ -17,9 +17,10 @@ func InitSessionStore() error {
 	})
 
 	SessionStore = session.New(session.Config{
-		Storage:    storage,
-		Expiration: 24 * time.Hour,
-		CookiePath: "/",
+		Storage:        storage,
+		Expiration:     24 * time.Hour,
+		CookiePath:     "/",
+		CookieHTTPOnly: true,
 	})
 
 	return nil
