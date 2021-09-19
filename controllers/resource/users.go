@@ -44,26 +44,19 @@ func UpdatePassword(c *fiber.Ctx) error {
 		})
 	}
 
-	hashed_old_password, err := models.HashPassword(params.OldPassword)
-	if err != nil {
+	if !CurrentUser.ComparePassword(params.OldPassword) {
 		return c.Status(422).JSON(types.Error{
 			Error: "Sai mật khẩu",
 		})
 	}
 
-	if CurrentUser.Password != hashed_old_password {
-		return c.Status(422).JSON(types.Error{
-			Error: "Sai mật khẩu",
-		})
-	}
-
-	if params.OldPassword == params.NewPassword {
+	if models.ComparePassword(params.OldPassword, params.NewPassword) {
 		return c.Status(422).JSON(types.Error{
 			Error: "Mật khẩu mới phải khác mật khẩu cũ",
 		})
 	}
 
-	if params.NewPassword != params.ConfirmPassword {
+	if models.ComparePassword(params.NewPassword, params.ConfirmPassword) {
 		return c.Status(422).JSON(types.Error{
 			Error: "Nhập lại mật khẩu không khớp",
 		})

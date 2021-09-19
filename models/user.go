@@ -23,18 +23,20 @@ type User struct {
 }
 
 func HashPassword(password string) (string, error) {
-
-	// Use GenerateFromPassword to hash & salt pwd
-	// MinCost is just an integer constant provided by the bcrypt
-	// package along with DefaultCost & MaxCost.
-	// The cost can be any value you want provided it isn't lower
-	// than the MinCost (4)
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
+	hashed, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
 	if err != nil {
-		return string(hash), err
+		return "", err
 	}
 
-	// GenerateFromPassword returns a byte slice so we need to
-	// convert the bytes to a string and return it
-	return string(hash), nil
+	return string(hashed), nil
+}
+
+func ComparePassword(x, y string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(x), []byte(y))
+	return err == nil
+}
+
+func (u *User) ComparePassword(password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
+	return err == nil
 }

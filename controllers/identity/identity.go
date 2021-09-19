@@ -39,8 +39,7 @@ func Login(c *fiber.Ctx) error {
 	var user *models.User
 	config.DataBase.First(&user, "email = ?", params.Email)
 
-	hashed, err := models.HashPassword(params.Password)
-	if err != nil || user.Password != hashed {
+	if !user.ComparePassword(params.Password) {
 		return c.Status(500).JSON(types.Error{
 			Error: "Sai mật khẩu",
 		})
