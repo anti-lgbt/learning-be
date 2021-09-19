@@ -5,6 +5,7 @@ import (
 	"github.com/anti-lgbt/learning-be/models"
 	"github.com/anti-lgbt/learning-be/types"
 	"github.com/gofiber/fiber/v2"
+	"github.com/volatiletech/null"
 )
 
 func Authenticate(c *fiber.Ctx) error {
@@ -15,10 +16,15 @@ func Authenticate(c *fiber.Ctx) error {
 		})
 	}
 
-	email := session.Get("email").(string)
+	email := session.Get("email").(null.String)
+	if !email.Valid {
+		return c.Status(500).JSON(types.Error{
+			Error: "Session không tồn tại",
+		})
+	}
 
 	var user *models.User
-	if result := config.DataBase.First(&user, "email = ?", email); result.Error != nil {
+	if result := config.DataBase.First(&user, "email = ?", email.String); result.Error != nil {
 		return c.Status(500).JSON(types.Error{
 			Error: "Session không tồn tại",
 		})
