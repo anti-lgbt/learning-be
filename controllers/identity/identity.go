@@ -2,6 +2,7 @@ package identity
 
 import (
 	"github.com/anti-lgbt/learning-be/config"
+	"github.com/anti-lgbt/learning-be/controllers/helpers"
 	"github.com/anti-lgbt/learning-be/models"
 	"github.com/anti-lgbt/learning-be/types"
 	"github.com/gofiber/fiber/v2"
@@ -26,6 +27,12 @@ func Login(c *fiber.Ctx) error {
 	if err := c.BodyParser(params); err != nil {
 		return c.Status(500).JSON(types.Error{
 			Error: "Không thể xác minh được body",
+		})
+	}
+
+	if err := helpers.Vaildate(params); err != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: err.Error(),
 		})
 	}
 
@@ -56,6 +63,12 @@ func Register(c *fiber.Ctx) error {
 	if err := c.BodyParser(params); err != nil {
 		return c.Status(500).JSON(types.Error{
 			Error: "Không thể xác minh được body",
+		})
+	}
+
+	if err := helpers.Vaildate(params); err != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: err.Error(),
 		})
 	}
 
