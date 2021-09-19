@@ -11,7 +11,7 @@ import (
 
 type User struct {
 	ID        uint64          `gorm:"primaryKey;autoIncrement;not null;index"`
-	Email     string          `gorm:"type:character varying(50);not null;index"`
+	Email     string          `gorm:"type:character varying(50);not null;index,unique"`
 	Password  string          `gorm:"type:character varying(255);not null"`
 	FullName  sql.NullString  `gorm:"type:character varying(255);index"`
 	Avatar    sql.NullString  `gorm:"type:character varying(50)"`
