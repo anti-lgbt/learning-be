@@ -9,8 +9,8 @@ import (
 )
 
 type AuthPayload struct {
-	Email    string `json:"email" validate:"email|required"`
-	Password string `json:"password" validate:"min:8|max:26|required"`
+	Email    string `json:"email" form:"email" validate:"email|required"`
+	Password string `json:"password" form:"password" validate:"min:8|max:26|required"`
 }
 
 type LoginPayload struct {
@@ -18,7 +18,7 @@ type LoginPayload struct {
 }
 
 type RegisterPayload struct {
-	FullName string `json:"full_name"`
+	FullName string `json:"full_name" form:"full_name"`
 	AuthPayload
 }
 
