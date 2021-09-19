@@ -1,6 +1,8 @@
 package public
 
 import (
+	"strings"
+
 	"github.com/anti-lgbt/learning-be/config"
 	"github.com/anti-lgbt/learning-be/controllers/entities"
 	"github.com/anti-lgbt/learning-be/controllers/helpers"
@@ -51,7 +53,7 @@ func GetProducts(c *fiber.Ctx) error {
 	}
 
 	if len(params.Name) > 0 {
-		tx = tx.Where("name LIKE ?", "%"+params.Name+"%")
+		tx = tx.Where("LOWER(name) LIKE ?", "%"+strings.ToLower(params.Name)+"%")
 	}
 
 	var products []*models.Product
