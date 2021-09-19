@@ -120,3 +120,20 @@ func Register(c *fiber.Ctx) error {
 
 	return c.Status(201).JSON(user)
 }
+
+func Logout(c *fiber.Ctx) error {
+	session, err := config.SessionStore.Get(c)
+	if err != nil {
+		return c.Status(500).JSON(types.Error{
+			Error: "Không thể xác minh session",
+		})
+	}
+
+	if err := session.Destroy(); err != nil {
+		return c.Status(500).JSON(types.Error{
+			Error: "Không thể xác minh session",
+		})
+	}
+
+	return c.Status(200).JSON(200)
+}
