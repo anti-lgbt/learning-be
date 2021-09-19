@@ -47,7 +47,7 @@ func GetProducts(c *fiber.Ctx) error {
 	}
 
 	if len(params.Type) > 0 {
-		tx = tx.Where("product_type_id IN (SELECT \"id\" FROM \"product_type\" WHERE \"name\" LIKE ?)", "%"+params.Type+"%")
+		tx = tx.Where("product_type_id IN (SELECT \"id\" FROM \"product_types\" WHERE \"name\" LIKE ?)", "%"+params.Type+"%")
 	}
 
 	if len(params.Name) > 0 {
