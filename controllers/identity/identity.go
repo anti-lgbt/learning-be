@@ -40,20 +40,24 @@ func Login(c *fiber.Ctx) error {
 	config.DataBase.First(&user, "email = ?", params.Email)
 
 	if !user.ComparePassword(params.Password) {
-		return c.Status(500).JSON(types.Error{
+		return c.Status(422).JSON(types.Error{
 			Error: "Sai mật khẩu",
 		})
 	}
 
 	session, err := config.SessionStore.Get(c)
 	if err != nil {
-		return c.Status(500).JSON(types.Error{
+		return c.Status(422).JSON(types.Error{
 			Error: "Không thể xác minh session",
 		})
 	}
 
 	session.Set("email", user.Email)
-	session.Save()
+	if err := session.Save(); err != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: err.Error(),
+		})
+	}
 
 	return c.Status(200).JSON(user)
 }
