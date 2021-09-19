@@ -17,15 +17,16 @@ func Authenticate(c *fiber.Ctx) error {
 
 	email := session.Get("email")
 	if email == nil {
-		return c.Status(500).JSON(types.Error{
+		return c.Status(401).JSON(types.Error{
 			Error: "Session không tồn tại",
 		})
 	}
 
 	var user *models.User
 	if result := config.DataBase.First(&user, "email = ?", email.(string)); result.Error != nil {
+		session.Destroy()
 		return c.Status(500).JSON(types.Error{
-			Error: "Session không tồn tại",
+			Error: "Session gặp lỗi",
 		})
 	}
 
