@@ -130,3 +130,21 @@ func GetProductImage(c *fiber.Ctx) error {
 
 	return c.SendFile(product.Image, false)
 }
+
+func GetProductTypes(c *fiber.Ctx) error {
+	var product_types []*models.ProductType
+
+	config.DataBase.Find(&product_types)
+
+	product_type_entities := make([]*entities.ProductType, 0)
+	for _, product_type := range product_types {
+		product_type_entities = append(product_type_entities, &entities.ProductType{
+			ID:        product_type.ID,
+			Name:      product_type.Name,
+			CreatedAt: product_type.CreatedAt,
+			UpdatedAt: product_type.UpdatedAt,
+		})
+	}
+
+	return c.Status(200).JSON(product_type_entities)
+}
