@@ -10,7 +10,7 @@ import (
 
 type AuthPayload struct {
 	Email    string `json:"email" form:"email" validate:"email|required"`
-	Password string `json:"password" form:"password" validate:"min:8|max:26|required"`
+	Password string `json:"password" form:"password" validate:"minLength:8|maxLength:26|required"`
 }
 
 type LoginPayload struct {
