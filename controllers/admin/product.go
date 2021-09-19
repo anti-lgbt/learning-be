@@ -3,6 +3,7 @@ package admin
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/creasty/defaults"
@@ -37,9 +38,27 @@ func GetProducts(c *fiber.Ctx) error {
 		})
 	}
 
-	tx := config.DataBase.
-		Offset(params.Page*params.Limit - params.Limit).
-		Limit(params.Limit)
+	tx := config.DataBase.Offset(params.Page*params.Limit - params.Limit).Limit(params.Limit)
+
+	if len(params.OrderBy) > 0 {
+		tx = tx.Order(params.OrderBy + " " + string(params.Ordering))
+	}
+
+	if params.Discounting {
+		tx = tx.Where("discount_percentage > 0")
+	}
+
+	if params.Special {
+		tx = tx.Where("special = true")
+	}
+
+	if len(params.Type) > 0 {
+		tx = tx.Where("product_type_id IN (SELECT \"id\" FROM \"product_types\" WHERE \"name\" LIKE ?)", "%"+params.Type+"%")
+	}
+
+	if len(params.Name) > 0 {
+		tx = tx.Where("LOWER(name) LIKE ?", "%"+strings.ToLower(params.Name)+"%")
+	}
 
 	if params.TimeFrom > 0 {
 		tx = tx.Where("created_at >= ?", time.Unix(params.TimeFrom, 0))
