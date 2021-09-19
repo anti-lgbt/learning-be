@@ -14,9 +14,9 @@ func Guest(c *fiber.Ctx) error {
 		})
 	}
 
-	email := session.Get("email").(string)
+	email := session.Get("email")
 
-	if len(email) > 0 {
+	if email != nil {
 		return c.Status(422).JSON(types.Error{
 			Error: "Vui lòng đăng xuất trước khi sử dụng chức năng này",
 		})
