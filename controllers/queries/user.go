@@ -2,8 +2,6 @@ package queries
 
 import (
 	"mime/multipart"
-
-	"github.com/volatiletech/null"
 )
 
 type UserPassword struct {
@@ -13,6 +11,6 @@ type UserPassword struct {
 }
 
 type UserPayload struct {
-	FullName null.String           `json:"full_name" form:"full_name"`
+	FullName string                `json:"full_name" form:"full_name"`
 	Avatar   *multipart.FileHeader `json:"avatar" form:"avatar" validate:"file/isFile|image/isImage"`
 }

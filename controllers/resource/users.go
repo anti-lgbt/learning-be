@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/volatiletech/null"
 
 	"github.com/anti-lgbt/learning-be/config"
 	"github.com/anti-lgbt/learning-be/controllers/entities"
@@ -19,12 +18,9 @@ func GetUser(c *fiber.Ctx) error {
 	CurrentUser := c.Locals("CurrentUser").(*models.User)
 
 	return c.Status(200).JSON(entities.User{
-		ID:    CurrentUser.ID,
-		Email: CurrentUser.Email,
-		FullName: null.String{
-			String: CurrentUser.FullName.String,
-			Valid:  CurrentUser.FullName.Valid,
-		},
+		ID:        CurrentUser.ID,
+		Email:     CurrentUser.Email,
+		FullName:  CurrentUser.FullName,
 		State:     CurrentUser.State,
 		Role:      CurrentUser.Role,
 		CreatedAt: CurrentUser.CreatedAt,
@@ -103,11 +99,8 @@ func UpdateUser(c *fiber.Ctx) error {
 		})
 	}
 
-	if params.FullName.Valid {
-		CurrentUser.FullName = sql.NullString{
-			String: params.FullName.String,
-			Valid:  true,
-		}
+	if len(params.FullName) > 0 {
+		CurrentUser.FullName = params.FullName
 	}
 
 	if params.Avatar != nil {
@@ -125,12 +118,9 @@ func UpdateUser(c *fiber.Ctx) error {
 	}
 
 	return c.Status(200).JSON(entities.User{
-		ID:    CurrentUser.ID,
-		Email: CurrentUser.Email,
-		FullName: null.String{
-			String: CurrentUser.FullName.String,
-			Valid:  CurrentUser.FullName.Valid,
-		},
+		ID:        CurrentUser.ID,
+		Email:     CurrentUser.Email,
+		FullName:  CurrentUser.FullName,
 		State:     CurrentUser.State,
 		Role:      CurrentUser.Role,
 		CreatedAt: CurrentUser.CreatedAt,

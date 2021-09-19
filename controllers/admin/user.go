@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"database/sql"
 	"time"
 
 	"github.com/anti-lgbt/learning-be/config"
@@ -110,12 +109,9 @@ func CreateUser(c *fiber.Ctx) error {
 	user := &models.User{
 		Email:    params.Email,
 		Password: hashed,
-		FullName: sql.NullString{
-			String: params.FullName.String,
-			Valid:  params.FullName.Valid,
-		},
-		State: params.State,
-		Role:  params.Role,
+		FullName: params.FullName,
+		State:    params.State,
+		Role:     params.Role,
 	}
 
 	return c.Status(201).JSON(user)
@@ -154,10 +150,7 @@ func UpdateUser(c *fiber.Ctx) error {
 
 		user.Password = hashed
 	}
-	user.FullName = sql.NullString{
-		String: params.FullName.String,
-		Valid:  params.FullName.Valid,
-	}
+	user.FullName = params.FullName
 	user.State = params.State
 	user.Role = params.Role
 

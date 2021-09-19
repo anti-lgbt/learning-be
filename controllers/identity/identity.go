@@ -1,8 +1,6 @@
 package identity
 
 import (
-	"database/sql"
-
 	"github.com/anti-lgbt/learning-be/config"
 	"github.com/anti-lgbt/learning-be/models"
 	"github.com/anti-lgbt/learning-be/types"
@@ -19,7 +17,7 @@ type LoginPayload struct {
 }
 
 type RegisterPayload struct {
-	FullName sql.NullString `json:"full_name"`
+	FullName string `json:"full_name"`
 	AuthPayload
 }
 
