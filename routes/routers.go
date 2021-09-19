@@ -7,15 +7,12 @@ import (
 	"github.com/anti-lgbt/learning-be/controllers/resource"
 	"github.com/anti-lgbt/learning-be/routes/middlewares"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/encryptcookie"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
 func SetupRouter() *fiber.App {
 	app := fiber.New()
-	app.Use(logger.New(), encryptcookie.New(encryptcookie.Config{
-		Key: "session_lmao",
-	}))
+	app.Use(logger.New())
 
 	api_v2_public := app.Group("/api/v2/public")
 	{
