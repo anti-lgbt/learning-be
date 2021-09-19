@@ -116,7 +116,11 @@ func Register(c *fiber.Ctx) error {
 	}
 
 	session.Set("email", user.Email)
-	session.Save()
+	if err := session.Save(); err != nil {
+		return c.Status(500).JSON(types.Error{
+			Error: "Không thể xác minh session",
+		})
+	}
 
 	return c.Status(201).JSON(user)
 }
@@ -130,6 +134,12 @@ func Logout(c *fiber.Ctx) error {
 	}
 
 	if err := session.Destroy(); err != nil {
+		return c.Status(500).JSON(types.Error{
+			Error: "Không thể xác minh session",
+		})
+	}
+
+	if err := session.Save(); err != nil {
 		return c.Status(500).JSON(types.Error{
 			Error: "Không thể xác minh session",
 		})
