@@ -53,6 +53,7 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	session.Set("email", user.Email)
+	session.Save()
 
 	return c.Status(200).JSON(user)
 }
@@ -111,6 +112,7 @@ func Register(c *fiber.Ctx) error {
 	}
 
 	session.Set("email", user.Email)
+	session.Save()
 
 	return c.Status(201).JSON(user)
 }
