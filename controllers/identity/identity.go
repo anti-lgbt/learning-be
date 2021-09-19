@@ -59,7 +59,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(200).JSON(user)
+	return c.Status(200).JSON(user.ToJSON())
 }
 
 func Register(c *fiber.Ctx) error {
@@ -122,7 +122,7 @@ func Register(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(201).JSON(user)
+	return c.Status(201).JSON(user.ToJSON())
 }
 
 func Logout(c *fiber.Ctx) error {

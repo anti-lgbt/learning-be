@@ -6,6 +6,7 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
+	"github.com/anti-lgbt/learning-be/controllers/entities"
 	"github.com/anti-lgbt/learning-be/types"
 )
 
@@ -39,4 +40,16 @@ func ComparePassword(x, y string) bool {
 func (u *User) ComparePassword(password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
 	return err == nil
+}
+
+func (u *User) ToJSON() *entities.User {
+	return &entities.User{
+		ID:        u.ID,
+		Email:     u.Email,
+		FullName:  u.FullName,
+		State:     u.State,
+		Role:      u.Role,
+		CreatedAt: u.CreatedAt,
+		UpdatedAt: u.UpdatedAt,
+	}
 }

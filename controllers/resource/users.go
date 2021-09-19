@@ -110,13 +110,7 @@ func UpdateUser(c *fiber.Ctx) error {
 		}
 	}
 
-	return c.Status(200).JSON(entities.User{
-		ID:        CurrentUser.ID,
-		Email:     CurrentUser.Email,
-		FullName:  CurrentUser.FullName,
-		State:     CurrentUser.State,
-		Role:      CurrentUser.Role,
-		CreatedAt: CurrentUser.CreatedAt,
-		UpdatedAt: CurrentUser.UpdatedAt,
-	})
+	config.DataBase.Save(&CurrentUser)
+
+	return c.Status(200).JSON(CurrentUser.ToJSON())
 }
