@@ -133,7 +133,6 @@ func Logout(c *fiber.Ctx) error {
 		})
 	}
 
-	session.Delete("email")
 	if err := session.Destroy(); err != nil {
 		return c.Status(500).JSON(types.Error{
 			Error: "Không thể xác minh session",

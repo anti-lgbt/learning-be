@@ -23,11 +23,11 @@ func SetupRouter() *fiber.App {
 		api_v2_public.Get("/products/:product_id/comments", public.GetComments)
 	}
 
-	api_v2_identity := app.Group("/api/v2/identity", middlewares.Guest)
+	api_v2_identity := app.Group("/api/v2/identity")
 	{
-		api_v2_identity.Post("/login", identity.Login)
-		api_v2_identity.Post("/register", identity.Register)
-		api_v2_identity.Post("/logout", identity.Logout)
+		api_v2_identity.Post("/login", identity.Login, middlewares.Guest)
+		api_v2_identity.Post("/register", identity.Register, middlewares.Guest)
+		api_v2_identity.Post("/logout", identity.Logout, middlewares.Authenticate)
 	}
 
 	api_v2_resource := app.Group("/api/v2/resource", middlewares.Authenticate)
