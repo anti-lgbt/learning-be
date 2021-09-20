@@ -95,6 +95,7 @@ func UpdateUser(c *fiber.Ctx) error {
 
 	log.Println(string(c.Body()))
 	log.Println(params.Avatar)
+	log.Println(c.FormFile("avatar"))
 
 	if len(params.FullName) > 0 {
 		CurrentUser.FullName = params.FullName
