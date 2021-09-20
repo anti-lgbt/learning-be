@@ -114,3 +114,13 @@ func UpdateUser(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(CurrentUser.ToJSON())
 }
+
+func GetUserAvatar(c *fiber.Ctx) error {
+	CurrentUser := c.Locals("CurrentUser").(*models.User)
+
+	if !CurrentUser.Avatar.Valid {
+		c.Status(200).JSON(nil)
+	}
+
+	return c.SendFile(CurrentUser.Avatar.String, false)
+}
