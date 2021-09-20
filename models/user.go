@@ -15,7 +15,7 @@ type User struct {
 	Email     string          `gorm:"type:character varying(50);not null;index,unique"`
 	Password  string          `gorm:"type:character varying(255);not null"`
 	FullName  string          `gorm:"type:character varying(255);not null;index"`
-	Avatar    sql.NullString  `gorm:"type:character varying(50)"`
+	Avatar    sql.NullString  `gorm:"type:character varying(255)"`
 	State     types.UserState `gorm:"type:character varying(10);not null;index;default:active"`
 	Role      types.UserRole  `gorm:"type:character varying(10);not null;index;default:member"`
 	CreatedAt time.Time       `gorm:"type:timestamp(0);not null;index"`
