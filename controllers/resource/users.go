@@ -3,7 +3,7 @@ package resource
 import (
 	"database/sql"
 	"fmt"
-	"log"
+	"net/http"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -93,31 +93,62 @@ func UpdateUser(c *fiber.Ctx) error {
 		})
 	}
 
-	log.Println(string(c.Body()))
-	log.Println(params.Avatar)
-	log.Println(c.FormFile("avatar"))
-
 	if len(params.FullName) > 0 {
 		CurrentUser.FullName = params.FullName
-	}
-
-	if params.Avatar != nil {
-		image_path := fmt.Sprintf("./uploads/%s", params.Avatar.Filename)
-		if err := c.SaveFile(params.Avatar, image_path); err != nil {
-			return c.Status(422).JSON(types.Error{
-				Error: "Không thể upload được ảnh",
-			})
-		}
-
-		CurrentUser.Avatar = sql.NullString{
-			String: image_path,
-			Valid:  true,
-		}
 	}
 
 	config.DataBase.Save(&CurrentUser)
 
 	return c.Status(200).JSON(CurrentUser.ToJSON())
+}
+
+func UploadUserAvatar(c *fiber.Ctx) error {
+	CurrentUser := c.Locals("CurrentUser").(*models.User)
+
+	file_header, err := c.FormFile("avatar")
+	if err != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: "Không thể upload được ảnh",
+		})
+	}
+
+	file, err := file_header.Open()
+	if err != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: "Không thể upload được ảnh",
+		})
+	}
+
+	buff := make([]byte, 512) // docs tell that it take only first 512 bytes into consideration
+	if _, err = file.Read(buff); err != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: "Không thể upload được ảnh",
+		})
+	}
+
+	content_type := http.DetectContentType(buff)
+
+	if content_type != "image/jpeg" && content_type != "image/png" {
+		return c.Status(422).JSON(types.Error{
+			Error: "Sai định dạng ảnh",
+		})
+	}
+
+	image_path := fmt.Sprintf("./uploads/%s", file_header.Filename)
+	if err := c.SaveFile(file_header, image_path); err != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: "Không thể upload được ảnh",
+		})
+	}
+
+	CurrentUser.Avatar = sql.NullString{
+		String: image_path,
+		Valid:  true,
+	}
+
+	config.DataBase.Save(&CurrentUser)
+
+	return c.Status(200).JSON(200)
 }
 
 func GetUserAvatar(c *fiber.Ctx) error {

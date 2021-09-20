@@ -1,9 +1,5 @@
 package queries
 
-import (
-	"mime/multipart"
-)
-
 type UserPassword struct {
 	OldPassword     string `json:"old_password" form:"old_password"`
 	NewPassword     string `json:"new_password" form:"new_password"`
@@ -11,6 +7,5 @@ type UserPassword struct {
 }
 
 type UserPayload struct {
-	FullName string                `json:"full_name" form:"full_name"`
-	Avatar   *multipart.FileHeader `json:"avatar" form:"avatar" validate:"file/isFile|image/isImage"`
+	FullName string `json:"full_name" form:"full_name"`
 }
