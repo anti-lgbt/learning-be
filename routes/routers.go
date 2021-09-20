@@ -33,6 +33,7 @@ func SetupRouter() *fiber.App {
 	api_v2_resource := app.Group("/api/v2/resource", middlewares.Authenticate)
 	{
 		api_v2_resource.Get("/users/me", resource.GetUser)
+		api_v2_resource.Get("/users/avatar", resource.GetUserAvatar)
 		api_v2_resource.Put("/users/password", resource.UpdatePassword)
 		api_v2_resource.Put("/users", resource.UpdateUser)
 	}
