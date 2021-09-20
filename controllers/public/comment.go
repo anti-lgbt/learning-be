@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/anti-lgbt/learning-be/config"
+	"github.com/anti-lgbt/learning-be/controllers/entities"
 	"github.com/anti-lgbt/learning-be/controllers/queries"
 	"github.com/anti-lgbt/learning-be/models"
 	"github.com/anti-lgbt/learning-be/types"
@@ -43,7 +44,20 @@ func GetComments(c *fiber.Ctx) error {
 		Where("product_id = ?", product.ID).
 		Offset(params.Page*params.Limit - params.Limit).
 		Limit(params.Limit).
+		Preload("User").
 		Find(&comments)
 
-	return c.Status(200).JSON(comments)
+	comment_entities := make([]*entities.Comment, 0)
+	for _, comment := range comments {
+		comment_entities = append(comment_entities, &entities.Comment{
+			ID:        comment.ID,
+			UserID:    comment.UserID,
+			FullName:  comment.User.FullName,
+			Content:   comment.Content,
+			CreatedAt: comment.CreatedAt,
+			UpdatedAt: comment.UpdatedAt,
+		})
+	}
+
+	return c.Status(200).JSON(comment_entities)
 }

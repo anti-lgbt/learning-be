@@ -9,4 +9,6 @@ type Comment struct {
 	Content   string    `gorm:"type:character varying(255);not null;index"`
 	CreatedAt time.Time `gorm:"type:timestamp(0);not null;index"`
 	UpdatedAt time.Time `gorm:"type:timestamp(0);not null;index"`
+	User      *User
+	Product   *Product
 }

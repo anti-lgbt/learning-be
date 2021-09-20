@@ -9,3 +9,7 @@ type UserPassword struct {
 type UserPayload struct {
 	FullName string `json:"full_name" form:"full_name"`
 }
+
+type IDQuery struct {
+	ID uint64 `query:"id" validate:"uint"`
+}
