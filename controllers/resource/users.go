@@ -3,6 +3,7 @@ package resource
 import (
 	"database/sql"
 	"fmt"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -91,6 +92,9 @@ func UpdateUser(c *fiber.Ctx) error {
 			Error: err.Error(),
 		})
 	}
+
+	log.Println(string(c.Body()))
+	log.Println(params.Avatar)
 
 	if len(params.FullName) > 0 {
 		CurrentUser.FullName = params.FullName
