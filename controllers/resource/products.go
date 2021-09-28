@@ -46,7 +46,7 @@ func CreateProductComment(c *fiber.Ctx) error {
 
 	return c.Status(201).JSON(entities.Comment{
 		ID:        comment.ID,
-		UserID:    comment.ID,
+		UserID:    comment.UserID,
 		FullName:  CurrentUser.FullName,
 		Content:   comment.Content,
 		CreatedAt: comment.CreatedAt,
