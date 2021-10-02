@@ -44,17 +44,17 @@ func SetupRouter() *fiber.App {
 
 	api_v2_admin := app.Group("/api/v2/admim", middlewares.Authenticate, middlewares.Admin)
 	{
-		api_v2_admin.Get("/products", admin.GetProducts)
-		api_v2_admin.Get("/products/:id", admin.GetProduct)
-		api_v2_admin.Post("/products", admin.CreateProduct)
-		api_v2_admin.Put("/products", admin.UpdateProduct)
-		api_v2_admin.Delete("/products/:id", admin.DeleteProduct)
-
 		api_v2_admin.Get("/products/types", admin.GetProductTypes)
 		api_v2_admin.Get("/products/types/:id", admin.GetProductType)
 		api_v2_admin.Post("/products/types", admin.CreateProductType)
 		api_v2_admin.Put("/products/types", admin.UpdateProductType)
 		api_v2_admin.Delete("/products/types", admin.DeleteProductType)
+
+		api_v2_admin.Get("/products", admin.GetProducts)
+		api_v2_admin.Get("/products/:id", admin.GetProduct)
+		api_v2_admin.Post("/products", admin.CreateProduct)
+		api_v2_admin.Put("/products", admin.UpdateProduct)
+		api_v2_admin.Delete("/products/:id", admin.DeleteProduct)
 
 		api_v2_admin.Get("/comments", admin.GetComments)
 		api_v2_admin.Delete("/comments/:id", admin.DeleteComment)
