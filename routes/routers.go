@@ -42,7 +42,7 @@ func SetupRouter() *fiber.App {
 		api_v2_resource.Post("/products/:product_id/comments", resource.CreateProductComment)
 	}
 
-	api_v2_admin := app.Group("/api/v2/admim", middlewares.Authenticate, middlewares.Admin)
+	api_v2_admin := app.Group("/api/v2/admin", middlewares.Authenticate, middlewares.Admin)
 	{
 		api_v2_admin.Get("/products/types", admin.GetProductTypes)
 		api_v2_admin.Get("/products/types/:id", admin.GetProductType)
