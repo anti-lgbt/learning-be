@@ -227,6 +227,24 @@ func GetProductTypes(c *fiber.Ctx) error {
 	return c.Status(200).JSON(product_types)
 }
 
+func GetProductType(c *fiber.Ctx) error {
+	id, err := c.ParamsInt("id")
+	if err != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: "Không tìm thấy product type",
+		})
+	}
+
+	var product_type *models.ProductType
+	if result := config.DataBase.First(&product_type, id); result.Error != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: "Không tìm thấy product type",
+		})
+	}
+
+	return c.Status(200).JSON(product_type)
+}
+
 func CreateProductType(c *fiber.Ctx) error {
 	params := new(queries.ProductTypePayload)
 	if err := c.BodyParser(params); err != nil {
@@ -293,20 +311,20 @@ func DeleteProductType(c *fiber.Ctx) error {
 	id, err := c.ParamsInt("id")
 	if err != nil {
 		return c.Status(422).JSON(types.Error{
-			Error: "Không tìm thấy user",
+			Error: "Không tìm thấy product type",
 		})
 	}
 
 	var product_type *models.ProductType
 	if result := config.DataBase.First(&product_type, id); result.Error != nil {
 		return c.Status(422).JSON(types.Error{
-			Error: "Không tìm thấy user",
+			Error: "Không tìm thấy product type",
 		})
 	}
 
 	if result := config.DataBase.Delete(&product_type); result.Error != nil {
 		return c.Status(422).JSON(types.Error{
-			Error: "Không thể xoá user",
+			Error: "Không thể xoá product type",
 		})
 	}
 

@@ -23,7 +23,7 @@ type LoginPayload struct {
 }
 
 type RegisterPayload struct {
-	FullName string `json:"full_name" form:"full_name"`
+	FullName string `json:"full_name" form:"full_name" validate:"required"`
 	AuthPayload
 }
 
