@@ -1,9 +1,14 @@
 package identity
 
 import (
+	"fmt"
+	"math/rand"
+	"time"
+
 	"github.com/anti-lgbt/learning-be/config"
 	"github.com/anti-lgbt/learning-be/controllers/helpers"
 	"github.com/anti-lgbt/learning-be/models"
+	"github.com/anti-lgbt/learning-be/services"
 	"github.com/anti-lgbt/learning-be/types"
 	"github.com/gofiber/fiber/v2"
 )
@@ -78,13 +83,13 @@ func Register(c *fiber.Ctx) error {
 
 	var n_user *models.User
 	if result := config.DataBase.First(&n_user, "email = ?", params.Email); result.Error == nil {
-		return c.Status(500).JSON(types.Error{
+		return c.Status(422).JSON(types.Error{
 			Error: "Email đã tồn tại",
 		})
 	}
 
 	if len(params.Password) < 8 {
-		return c.Status(500).JSON(types.Error{
+		return c.Status(422).JSON(types.Error{
 			Error: "Password cần ít nhất 8 ký tự",
 		})
 	}
@@ -103,7 +108,7 @@ func Register(c *fiber.Ctx) error {
 	}
 
 	if result := config.DataBase.Create(&user); result.Error != nil {
-		return c.Status(500).JSON(types.Error{
+		return c.Status(422).JSON(types.Error{
 			Error: "Không thể tạo user",
 		})
 	}
@@ -144,6 +149,64 @@ func Logout(c *fiber.Ctx) error {
 			Error: "Không thể xác minh session",
 		})
 	}
+
+	return c.Status(200).JSON(200)
+}
+
+type ForgotPasswordPayload struct {
+	Email    string          `json:"email" form:"email" validate:"email|required"`
+}
+
+func randomNumber(min, max int32) int32 {
+	rand.Seed(time.Now().UnixNano())
+	return min + int32(rand.Intn(int(max-min)))
+}
+
+func randomStringGenerator(charSet string, codeLength int32) string {
+	code := ""
+	charSetLength := int32(len(charSet))
+	for i:= int32(0); i < codeLength; i++ {
+		index := randomNumber(0, charSetLength)
+		code += string(charSet[index])
+	}
+
+	return code
+}
+
+func generateRandomStrongPassword() string {
+	// random set of: abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ123456789!@#$&*_
+	charSet := "RW!Vx&6fMHyPYSB1da*4LTm3ki@5c2ptgDzZ9Gq8w7Ke$XNE#s_jvrJuQnFCAUbh"
+	return randomStringGenerator(charSet, 12)
+}
+
+func ForgotPassword(c *fiber.Ctx) error {
+	var params = new(ForgotPasswordPayload)
+	if err := c.BodyParser(params); err != nil {
+		return c.Status(500).JSON(types.Error{
+			Error: "Không thể xác minh được body",
+		})
+	}
+
+	if err := helpers.Vaildate(params); err != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: err.Error(),
+		})
+	}
+
+	var user *models.User
+	if result := config.DataBase.First(&user, "email = ?", params.Email); result.Error != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: "Email không tồn tại",
+		})
+	}
+
+	new_password := generateRandomStrongPassword();
+	new_password_hashed, _ := models.HashPassword(new_password);
+
+	user.Password = new_password_hashed
+	config.DataBase.Save(&user)
+
+	services.SendEmail(user.Email, "Tài khoản X-SHOP của bạn vừa được khôi phục mật khẩu", fmt.Sprintf("Mật khẩu mới của bạn là: %s", new_password))
 
 	return c.Status(200).JSON(200)
 }

@@ -29,6 +29,7 @@ func SetupRouter() *fiber.App {
 		api_v2_identity.Post("/login", identity.Login, middlewares.Guest)
 		api_v2_identity.Post("/register", identity.Register, middlewares.Guest)
 		api_v2_identity.Post("/logout", identity.Logout, middlewares.Authenticate)
+		api_v2_identity.Post("/forgot_password", identity.ForgotPassword, middlewares.Guest)
 	}
 
 	api_v2_resource := app.Group("/api/v2/resource", middlewares.Authenticate)
