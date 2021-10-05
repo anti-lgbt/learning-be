@@ -218,16 +218,20 @@ func UpdateProductImage(c *fiber.Ctx) error {
 	}
 
 	image, err := c.FormFile("image")
-	if err != nil && image != nil {
-		image_path := fmt.Sprintf("./uploads/%s", image.Filename)
-		if err := c.SaveFile(image, image_path); err != nil {
-			return c.Status(422).JSON(types.Error{
-				Error: "Không thể upload được ảnh",
-			})
-		}
-
-		product.Image = image_path
+	if err != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: "Không tìm thấy ảnh",
+		})
 	}
+
+	image_path := fmt.Sprintf("./uploads/%s", image.Filename)
+	if err := c.SaveFile(image, image_path); err != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: "Không thể upload được ảnh",
+		})
+	}
+
+	product.Image = image_path
 
 	config.DataBase.Save(&product)
 
