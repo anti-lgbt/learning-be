@@ -18,7 +18,7 @@ type UserPayload struct {
 	ID       uint64          `json:"id" form:"id"`
 	Email    string          `json:"email" form:"email" validate:"email"`
 	Password string          `json:"password" form:"password"`
-	FullName string          `json:"full_name" form:"full_name"`
+	FullName string          `json:"full_name" form:"full_name" validate:"required"`
 	State    types.UserState `json:"state" form:"state" validate:"StateValidator|required"`
 	Role     types.UserRole  `json:"role" form:"role" validate:"RoleValidator|required"`
 }

@@ -18,7 +18,7 @@ type ProductPayload struct {
 	Price              decimal.Decimal `json:"price" form:"price" validate:"decimalPositive|required"`
 	DiscountPercentage decimal.Decimal `json:"discount_percentage" form:"discount_percentage" validate:"DiscountPercentageValidator|required"`
 	StockLeft          uint64          `json:"stock_left" form:"stock_left" validate:"uint|required"`
-	Special            bool            `json:"special" form:"special" validate:"bool|required"`
+	Special            bool            `json:"special" form:"special" validate:"bool"`
 }
 
 func (p ProductPayload) DiscountPercentageValidator(val decimal.Decimal) bool {
