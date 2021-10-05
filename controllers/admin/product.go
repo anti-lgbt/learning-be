@@ -197,6 +197,8 @@ func UpdateProduct(c *fiber.Ctx) error {
 	product.StockLeft = params.StockLeft
 	product.Special = params.Special
 
+	config.DataBase.Save(&product)
+
 	return c.Status(200).JSON(productToEntity(product))
 }
 
