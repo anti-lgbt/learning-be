@@ -9,7 +9,8 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN go build -o main ./main.go
+RUN go build -o api ./cmd/api/main.go
+RUN go build -o cron ./cmd/cron/main.go
 
 
 FROM alpine:3.13.6
@@ -17,4 +18,5 @@ FROM alpine:3.13.6
 RUN apk add ca-certificates
 WORKDIR /app
 
-COPY --from=builder /build/main ./
+COPY --from=builder /build/api ./
+COPY --from=builder /build/cron ./
