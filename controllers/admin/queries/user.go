@@ -16,7 +16,7 @@ type UserQuery struct {
 
 type UserPayload struct {
 	ID       uint64          `json:"id" form:"id"`
-	Email    string          `json:"email" form:"email" validate:"email|required"`
+	Email    string          `json:"email" form:"email" validate:"email"`
 	Password string          `json:"password" form:"password"`
 	FullName string          `json:"full_name" form:"full_name"`
 	State    types.UserState `json:"state" form:"state" validate:"StateValidator|required"`

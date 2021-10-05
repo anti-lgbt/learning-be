@@ -117,6 +117,12 @@ func CreateUser(c *fiber.Ctx) error {
 		})
 	}
 
+	if len(params.Email) == 0 {
+		return c.Status(422).JSON(types.Error{
+			Error: "Bạn chưa nhập email",
+		})
+	}
+
 	hashed, err := models.HashPassword(params.Password)
 	if err != nil {
 		return c.Status(422).JSON(types.Error{
