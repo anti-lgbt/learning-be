@@ -17,7 +17,6 @@ func userToEntity(user *models.User) entities.User {
 	return entities.User{
 		ID:        user.ID,
 		Email:     user.Email,
-		Password:  user.Password,
 		FullName:  user.FullName,
 		State:     user.State,
 		Role:      user.Role,
