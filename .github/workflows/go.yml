@@ -23,6 +23,7 @@ jobs:
 
     - name: Build
       run: |
-        go build -o main ./main.go
+        go build -o api ./cmd/api/main.go
+        go build -o cron ./cmd/cron/main.go
     - name: Test
       run: go test -v ./...

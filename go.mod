@@ -48,7 +48,6 @@ require (
 	github.com/creasty/defaults v1.5.2
 	github.com/friendsofgo/errors v0.9.2 // indirect
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
-	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/sendgrid/sendgrid-go v3.10.1+incompatible
 	github.com/volatiletech/inflect v0.0.1 // indirect
 	github.com/volatiletech/sqlboiler v3.7.1+incompatible // indirect
