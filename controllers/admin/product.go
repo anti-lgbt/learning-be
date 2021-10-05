@@ -118,7 +118,7 @@ func GetProduct(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(200).JSON(product)
+	return c.Status(200).JSON(productToEntity(product))
 }
 
 func CreateProduct(c *fiber.Ctx) error {
@@ -142,13 +142,6 @@ func CreateProduct(c *fiber.Ctx) error {
 		})
 	}
 
-	image_path := fmt.Sprintf("./uploads/%s", params.Image.Filename)
-	if err := c.SaveFile(params.Image, image_path); err != nil {
-		return c.Status(422).JSON(types.Error{
-			Error: "Không thể upload được ảnh",
-		})
-	}
-
 	product := &models.Product{
 		ProductTypeID:      product_type.ID,
 		Name:               params.Name,
@@ -157,7 +150,6 @@ func CreateProduct(c *fiber.Ctx) error {
 		DiscountPercentage: params.DiscountPercentage,
 		StockLeft:          params.StockLeft,
 		Special:            params.Special,
-		Image:              image_path,
 	}
 
 	if result := config.DataBase.Create(&product); result.Error != nil {
@@ -205,18 +197,39 @@ func UpdateProduct(c *fiber.Ctx) error {
 	product.StockLeft = params.StockLeft
 	product.Special = params.Special
 
-	image_path := fmt.Sprintf("./uploads/%s", params.Image.Filename)
-	if err := c.SaveFile(params.Image, image_path); err != nil {
+	return c.Status(200).JSON(productToEntity(product))
+}
+
+func UpdateProductImage(c *fiber.Ctx) error {
+	id, err := c.ParamsInt("id")
+	if err != nil {
 		return c.Status(422).JSON(types.Error{
-			Error: "Không thể upload được ảnh",
+			Error: "Không tìm thấy product",
 		})
 	}
 
-	product.Image = image_path
+	var product *models.Product
+	if result := config.DataBase.First(&product, id); result.Error != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: "Không tìm thấy product",
+		})
+	}
+
+	image, err := c.FormFile("image")
+	if err != nil && image != nil {
+		image_path := fmt.Sprintf("./uploads/%s", image.Filename)
+		if err := c.SaveFile(image, image_path); err != nil {
+			return c.Status(422).JSON(types.Error{
+				Error: "Không thể upload được ảnh",
+			})
+		}
+
+		product.Image = image_path
+	}
 
 	config.DataBase.Save(&product)
 
-	return c.Status(200).JSON(productToEntity(product))
+	return c.Status(200).JSON(200)
 }
 
 func DeleteProduct(c *fiber.Ctx) error {
