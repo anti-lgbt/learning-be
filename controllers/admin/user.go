@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/anti-lgbt/learning-be/config"
+	"github.com/anti-lgbt/learning-be/controllers/admin/entities"
 	"github.com/anti-lgbt/learning-be/controllers/admin/queries"
 	"github.com/anti-lgbt/learning-be/controllers/helpers"
 	"github.com/anti-lgbt/learning-be/models"
@@ -11,6 +12,19 @@ import (
 	"github.com/creasty/defaults"
 	"github.com/gofiber/fiber/v2"
 )
+
+func userToEntity(user *models.User) entities.User {
+	return entities.User{
+		ID:        user.ID,
+		Email:     user.Email,
+		Password:  user.Password,
+		FullName:  user.FullName,
+		State:     user.State,
+		Role:      user.Role,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
+	}
+}
 
 func GetUsers(c *fiber.Ctx) error {
 	var users []*models.User
@@ -46,25 +60,30 @@ func GetUsers(c *fiber.Ctx) error {
 		tx = tx.Where("updated_at >= ?", time.Unix(params.TimeTo, 0))
 	}
 
-	if len(params.Email) == 0 {
+	if len(params.Email) > 0 {
 		tx = tx.Where("email = ?", params.Email)
 	}
 
-	if len(params.FullName) == 0 {
+	if len(params.FullName) > 0 {
 		tx = tx.Where("full_name LIKE ?", "%"+params.FullName+"%")
 	}
 
-	if len(params.State) == 0 {
+	if len(params.State) > 0 {
 		tx = tx.Where("state = ?", params.State)
 	}
 
-	if len(params.Role) == 0 {
+	if len(params.Role) > 0 {
 		tx = tx.Where("role = ?", params.Role)
 	}
 
-	config.DataBase.Find(&users)
+	tx.Find(&users)
 
-	return c.Status(200).JSON(users)
+	user_entities := make([]entities.User, 0)
+	for _, user := range users {
+		user_entities = append(user_entities, userToEntity(user))
+	}
+
+	return c.Status(200).JSON(user_entities)
 }
 
 func GetUser(c *fiber.Ctx) error {
@@ -82,7 +101,7 @@ func GetUser(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(200).JSON(user)
+	return c.Status(200).JSON(userToEntity(user))
 }
 
 func CreateUser(c *fiber.Ctx) error {
@@ -114,7 +133,7 @@ func CreateUser(c *fiber.Ctx) error {
 		Role:     params.Role,
 	}
 
-	return c.Status(201).JSON(user)
+	return c.Status(201).JSON(userToEntity(user))
 }
 
 func UpdateUser(c *fiber.Ctx) error {
@@ -154,7 +173,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	user.State = params.State
 	user.Role = params.Role
 
-	return c.Status(200).JSON(user)
+	return c.Status(200).JSON(userToEntity(user))
 }
 
 func DeleteUser(c *fiber.Ctx) error {
@@ -178,5 +197,5 @@ func DeleteUser(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(200).JSON(user)
+	return c.Status(200).JSON(200)
 }

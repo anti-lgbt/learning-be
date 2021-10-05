@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"database/sql"
 	"fmt"
 	"strings"
 	"time"
@@ -10,11 +9,37 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/anti-lgbt/learning-be/config"
+	"github.com/anti-lgbt/learning-be/controllers/admin/entities"
 	"github.com/anti-lgbt/learning-be/controllers/admin/queries"
 	"github.com/anti-lgbt/learning-be/controllers/helpers"
 	"github.com/anti-lgbt/learning-be/models"
 	"github.com/anti-lgbt/learning-be/types"
 )
+
+func productToEntity(product *models.Product) entities.Product {
+	return entities.Product{
+		ID:                 product.ID,
+		ProductTypeID:      product.ProductTypeID,
+		Name:               product.Name,
+		Description:        product.Description,
+		Price:              product.Price,
+		DiscountPercentage: product.DiscountPercentage,
+		StockLeft:          product.StockLeft,
+		Special:            product.Special,
+		ViewCount:          product.ViewCount,
+		CreatedAt:          product.CreatedAt,
+		UpdatedAt:          product.UpdatedAt,
+	}
+}
+
+func productTypeToEntity(product_type *models.ProductType) entities.ProductType {
+	return entities.ProductType{
+		ID:        product_type.ID,
+		Name:      product_type.Name,
+		CreatedAt: product_type.CreatedAt,
+		UpdatedAt: product_type.UpdatedAt,
+	}
+}
 
 func GetProducts(c *fiber.Ctx) error {
 	var products []*models.Product
@@ -70,7 +95,12 @@ func GetProducts(c *fiber.Ctx) error {
 
 	tx.Find(&products)
 
-	return c.Status(200).JSON(products)
+	product_entities := make([]entities.Product, 0)
+	for _, product := range products {
+		product_entities = append(product_entities, productToEntity(product))
+	}
+
+	return c.Status(200).JSON(product_entities)
 }
 
 func GetProduct(c *fiber.Ctx) error {
@@ -120,12 +150,9 @@ func CreateProduct(c *fiber.Ctx) error {
 	}
 
 	product := &models.Product{
-		ProductTypeID: product_type.ID,
-		Name:          params.Name,
-		Description: sql.NullString{
-			String: params.Description.String,
-			Valid:  params.Description.Valid,
-		},
+		ProductTypeID:      product_type.ID,
+		Name:               params.Name,
+		Description:        params.Description,
 		Price:              params.Price,
 		DiscountPercentage: params.DiscountPercentage,
 		StockLeft:          params.StockLeft,
@@ -139,7 +166,7 @@ func CreateProduct(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(201).JSON(product)
+	return c.Status(201).JSON(productToEntity(product))
 }
 
 func UpdateProduct(c *fiber.Ctx) error {
@@ -172,10 +199,7 @@ func UpdateProduct(c *fiber.Ctx) error {
 
 	product.ProductTypeID = product_type.ID
 	product.Name = params.Name
-	product.Description = sql.NullString{
-		String: params.Description.String,
-		Valid:  params.Description.Valid,
-	}
+	product.Description = params.Description
 	product.Price = params.Price
 	product.DiscountPercentage = params.DiscountPercentage
 	product.StockLeft = params.StockLeft
@@ -192,7 +216,7 @@ func UpdateProduct(c *fiber.Ctx) error {
 
 	config.DataBase.Save(&product)
 
-	return c.Status(200).JSON(product)
+	return c.Status(200).JSON(productToEntity(product))
 }
 
 func DeleteProduct(c *fiber.Ctx) error {
@@ -216,7 +240,7 @@ func DeleteProduct(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(200).JSON(product)
+	return c.Status(200).JSON(200)
 }
 
 func GetProductTypes(c *fiber.Ctx) error {
@@ -224,7 +248,12 @@ func GetProductTypes(c *fiber.Ctx) error {
 
 	config.DataBase.Find(&product_types)
 
-	return c.Status(200).JSON(product_types)
+	product_type_entities := make([]entities.ProductType, 0)
+	for _, product_type := range product_types {
+		product_type_entities = append(product_type_entities, productTypeToEntity(product_type))
+	}
+
+	return c.Status(200).JSON(product_type_entities)
 }
 
 func GetProductType(c *fiber.Ctx) error {
@@ -242,7 +271,7 @@ func GetProductType(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(200).JSON(product_type)
+	return c.Status(200).JSON(productTypeToEntity(product_type))
 }
 
 func CreateProductType(c *fiber.Ctx) error {
@@ -276,7 +305,7 @@ func CreateProductType(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(201).JSON(product_type)
+	return c.Status(201).JSON(productTypeToEntity(product_type))
 }
 
 func UpdateProductType(c *fiber.Ctx) error {
@@ -304,7 +333,7 @@ func UpdateProductType(c *fiber.Ctx) error {
 
 	config.DataBase.Save(&product_type)
 
-	return c.Status(200).JSON(product_type)
+	return c.Status(200).JSON(productTypeToEntity(product_type))
 }
 
 func DeleteProductType(c *fiber.Ctx) error {
@@ -328,5 +357,5 @@ func DeleteProductType(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(200).JSON(product_type)
+	return c.Status(200).JSON(200)
 }

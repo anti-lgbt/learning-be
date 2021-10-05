@@ -7,11 +7,23 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/anti-lgbt/learning-be/config"
+	"github.com/anti-lgbt/learning-be/controllers/admin/entities"
 	"github.com/anti-lgbt/learning-be/controllers/admin/queries"
 	"github.com/anti-lgbt/learning-be/controllers/helpers"
 	"github.com/anti-lgbt/learning-be/models"
 	"github.com/anti-lgbt/learning-be/types"
 )
+
+func commentToEntity(comment *models.Comment) entities.Comment {
+	return entities.Comment{
+		ID:        comment.ID,
+		UserID:    comment.UserID,
+		ProductID: comment.ProductID,
+		Content:   comment.Content,
+		CreatedAt: comment.CreatedAt,
+		UpdatedAt: comment.UpdatedAt,
+	}
+}
 
 func GetComments(c *fiber.Ctx) error {
 	var comments []*models.Comment
@@ -57,7 +69,12 @@ func GetComments(c *fiber.Ctx) error {
 
 	tx.Find(&comments)
 
-	return c.Status(200).JSON(comments)
+	var comment_entities = make([]entities.Comment, 0)
+	for _, comment := range comments {
+		comment_entities = append(comment_entities, commentToEntity(comment))
+	}
+
+	return c.Status(200).JSON(comment_entities)
 }
 
 func GetComment(c *fiber.Ctx) error {
@@ -75,7 +92,7 @@ func GetComment(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(200).JSON(comment)
+	return c.Status(200).JSON(commentToEntity(comment))
 }
 
 func DeleteComment(c *fiber.Ctx) error {
@@ -99,5 +116,5 @@ func DeleteComment(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(200).JSON(comment)
+	return c.Status(200).JSON(200)
 }

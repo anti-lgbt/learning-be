@@ -102,8 +102,8 @@ func GetProduct(c *fiber.Ctx) error {
 		Type: product.ProductType.Name,
 		Name: product.Name,
 		Description: null.String{
-			String: product.Description.String,
-			Valid:  product.Description.Valid,
+			String: product.Description,
+			Valid:  true,
 		},
 		Price:              product.Price,
 		DiscountPercentage: product.DiscountPercentage,

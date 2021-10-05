@@ -55,4 +55,7 @@ require (
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 )
 
-require github.com/sendgrid/rest v2.6.5+incompatible // indirect
+require (
+	github.com/jasonlvhit/gocron v0.0.1
+	github.com/sendgrid/rest v2.6.5+incompatible // indirect
+)

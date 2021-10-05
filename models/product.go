@@ -1,7 +1,6 @@
 package models
 
 import (
-	"database/sql"
 	"time"
 
 	"github.com/shopspring/decimal"
@@ -11,7 +10,7 @@ type Product struct {
 	ID                 uint64          `gorm:"primaryKey;autoIncrement;not null;index"`
 	ProductTypeID      uint64          `gorm:"type:integer;not null"`
 	Name               string          `gorm:"type:character varying(255);not null;index"`
-	Description        sql.NullString  `gorm:"type:character varying(255)"`
+	Description        string          `gorm:"type:character varying(255)"`
 	Price              decimal.Decimal `gorm:"type:numeric(32,16);not null;default:0.0"`
 	DiscountPercentage decimal.Decimal `gorm:"type:numeric(32,16);not null;default:0.0"`
 	StockLeft          uint64          `gorm:"type:integer;not null;default:0"`
