@@ -25,7 +25,7 @@ type ProductPayload struct {
 }
 
 func (p ProductPayload) DiscountPercentageValidator(val decimal.Decimal) bool {
-	return !val.IsPositive()
+	return !val.IsNegative()
 }
 
 type ProductTypePayload struct {
