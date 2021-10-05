@@ -9,5 +9,7 @@ func InitializeConfig() error {
 		return err
 	}
 
+	InitValidator()
+
 	return nil
 }
