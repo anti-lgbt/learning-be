@@ -138,6 +138,8 @@ func CreateUser(c *fiber.Ctx) error {
 		Role:     params.Role,
 	}
 
+	config.DataBase.Create(&user)
+
 	return c.Status(201).JSON(userToEntity(user))
 }
 
@@ -162,8 +164,6 @@ func UpdateUser(c *fiber.Ctx) error {
 		})
 	}
 
-	user.Email = params.Email
-
 	if len(params.Password) > 0 {
 		hashed, err := models.HashPassword(params.Password)
 		if err != nil {
@@ -177,6 +177,8 @@ func UpdateUser(c *fiber.Ctx) error {
 	user.FullName = params.FullName
 	user.State = params.State
 	user.Role = params.Role
+
+	config.DataBase.Save(&user)
 
 	return c.Status(200).JSON(userToEntity(user))
 }
