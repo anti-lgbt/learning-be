@@ -58,7 +58,7 @@ func SendEmail(to, subject, content string) {
 	msg := append(buff.Bytes(), "\r\n"...)
 	msg = append(msg, text...)
 
-	log.Println(msg)
+	log.Println(string(msg))
 
 	recipients := []string{email.ToAddress}
 	auth := smtp.PlainAuth("", smtp_user, smtp_password, smtp_host)
