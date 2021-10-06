@@ -12,7 +12,7 @@ func main() {
 		return
 	}
 
-	config.DataBase.AutoMigrate(&models.User{}, &models.ProductType{}, &models.Product{}, &models.Comment{})
+	config.DataBase.AutoMigrate(&models.User{}, &models.ProductType{}, &models.Product{}, &models.Comment{}, &models.CommentStatistic{})
 	r := routes.SetupRouter()
 	// running
 	r.Listen(":3000")

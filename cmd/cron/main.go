@@ -9,6 +9,8 @@ import (
 )
 
 func main() {
+	config.DataBase.AutoMigrate(&models.User{}, &models.ProductType{}, &models.Product{}, &models.Comment{}, &models.CommentStatistic{})
+
 	s := gocron.NewScheduler()
 	s.Every(1).Day().At("00:00:00").Do(release_comment_statistics)
 	<-s.Start()
