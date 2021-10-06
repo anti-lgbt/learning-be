@@ -63,7 +63,7 @@ func SendEmail(to, subject, content string) {
 	recipients := []string{email.ToAddress}
 	auth := smtp.PlainAuth("", smtp_user, smtp_password, smtp_host)
 	if err := smtp.SendMail(smtp_host+":"+smtp_port, auth, email.FromAddress, recipients, msg); err != nil {
-		config.Logger.Errorf("Error4: %v", err)
+		config.Logger.Errorf("Error4: %v", err.Error())
 		return
 	}
 	fmt.Println("Email Sent Successfully!")
