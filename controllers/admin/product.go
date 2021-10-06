@@ -152,6 +152,18 @@ func CreateProduct(c *fiber.Ctx) error {
 		Special:            params.Special,
 	}
 
+	image, err := c.FormFile("image")
+	if err == nil {
+		image_path := fmt.Sprintf("./uploads/%s", image.Filename)
+		if err := c.SaveFile(image, image_path); err != nil {
+			return c.Status(422).JSON(types.Error{
+				Error: "Không thể upload được ảnh",
+			})
+		}
+
+		product.Image = image_path
+	}
+
 	if result := config.DataBase.Create(&product); result.Error != nil {
 		return c.Status(422).JSON(types.Error{
 			Error: "Không thể tạo product",
