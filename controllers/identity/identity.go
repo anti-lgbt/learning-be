@@ -206,7 +206,7 @@ func ForgotPassword(c *fiber.Ctx) error {
 	user.Password = new_password_hashed
 	config.DataBase.Save(&user)
 
-	services.SendEmail(user.Email, "Tài khoản X-SHOP của bạn vừa được khôi phục mật khẩu", fmt.Sprintf("Mật khẩu mới của bạn là: %s", new_password))
+	go services.SendEmail(user.Email, "Tài khoản X-SHOP của bạn vừa được khôi phục mật khẩu", fmt.Sprintf("Mật khẩu mới của bạn là: %s", new_password))
 
 	return c.Status(200).JSON(200)
 }
