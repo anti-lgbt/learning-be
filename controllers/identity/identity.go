@@ -154,7 +154,7 @@ func Logout(c *fiber.Ctx) error {
 }
 
 type ForgotPasswordPayload struct {
-	Email    string          `json:"email" form:"email" validate:"email|required"`
+	Email string `json:"email" form:"email" validate:"email|required"`
 }
 
 func randomNumber(min, max int32) int32 {
@@ -165,7 +165,7 @@ func randomNumber(min, max int32) int32 {
 func randomStringGenerator(charSet string, codeLength int32) string {
 	code := ""
 	charSetLength := int32(len(charSet))
-	for i:= int32(0); i < codeLength; i++ {
+	for i := int32(0); i < codeLength; i++ {
 		index := randomNumber(0, charSetLength)
 		code += string(charSet[index])
 	}
@@ -200,8 +200,8 @@ func ForgotPassword(c *fiber.Ctx) error {
 		})
 	}
 
-	new_password := generateRandomStrongPassword();
-	new_password_hashed, _ := models.HashPassword(new_password);
+	new_password := generateRandomStrongPassword()
+	new_password_hashed, _ := models.HashPassword(new_password)
 
 	user.Password = new_password_hashed
 	config.DataBase.Save(&user)

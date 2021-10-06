@@ -18,5 +18,6 @@ FROM alpine:3.13.6
 RUN apk add ca-certificates
 WORKDIR /app
 
+COPY --from=builder /build/config/email.tpl ./config/email.tpl
 COPY --from=builder /build/api ./
 COPY --from=builder /build/cron ./
