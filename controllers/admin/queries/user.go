@@ -10,6 +10,7 @@ type UserQuery struct {
 	FullName string `query:"full_name"`
 	State    string `query:"state"`
 	Role     string `query:"role"`
+	queries.Order
 	queries.Pagination
 	queries.Period
 }
@@ -18,7 +19,7 @@ type UserPayload struct {
 	ID       uint64          `json:"id" form:"id"`
 	Email    string          `json:"email" form:"email" validate:"email"`
 	Password string          `json:"password" form:"password"`
-	FullName string          `json:"full_name" form:"full_name" validate:"required"`
+	FullName string          `json:"full_name" form:"full_name" validate:"minLength:4|maxLength:50|required"`
 	State    types.UserState `json:"state" form:"state" validate:"StateValidator|required"`
 	Role     types.UserRole  `json:"role" form:"role" validate:"RoleValidator|required"`
 }

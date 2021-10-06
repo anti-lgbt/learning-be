@@ -77,6 +77,10 @@ func GetUsers(c *fiber.Ctx) error {
 		tx = tx.Where("role = ?", params.Role)
 	}
 
+	if len(params.OrderBy) > 0 {
+		tx = tx.Order(params.OrderBy + " " + string(params.Ordering))
+	}
+
 	tx.Find(&users)
 
 	user_entities := make([]entities.User, 0)

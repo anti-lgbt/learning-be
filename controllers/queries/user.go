@@ -7,7 +7,7 @@ type UserPassword struct {
 }
 
 type UserPayload struct {
-	FullName string `json:"full_name" form:"full_name"`
+	FullName string `json:"full_name" form:"full_name" validate:"minLength:4|maxLength:50|required"`
 }
 
 type IDQuery struct {
