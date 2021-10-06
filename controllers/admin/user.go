@@ -246,6 +246,8 @@ func UploadUserAvatar(c *fiber.Ctx) error {
 		Valid:  true,
 	}
 
+	config.DataBase.Save(&user)
+
 	return c.Status(200).JSON(200)
 }
 
