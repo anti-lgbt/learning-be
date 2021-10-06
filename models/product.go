@@ -16,7 +16,7 @@ type Product struct {
 	StockLeft          uint64          `gorm:"type:integer;not null;default:0"`
 	Special            bool            `gorm:"type:boolean;index;default:false"`
 	ViewCount          uint64          `gorm:"type:integer;not null;default:0"`
-	Image              string          `gorm:"type:character varying(255)"`
+	Image              string          `gorm:"type:character varying(255);not null"`
 	CreatedAt          time.Time       `gorm:"type:timestamp(0);not null;index"`
 	UpdatedAt          time.Time       `gorm:"type:timestamp(0);not null;index"`
 	Comments           []*Comment      `gorm:"constraint:OnDelete:CASCADE"`

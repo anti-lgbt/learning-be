@@ -3,7 +3,6 @@ package resource
 import (
 	"database/sql"
 	"fmt"
-	"net/http"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -112,23 +111,7 @@ func UploadUserAvatar(c *fiber.Ctx) error {
 		})
 	}
 
-	file, err := file_header.Open()
-	if err != nil {
-		return c.Status(422).JSON(types.Error{
-			Error: "Không thể upload được ảnh",
-		})
-	}
-
-	buff := make([]byte, 512) // docs tell that it take only first 512 bytes into consideration
-	if _, err = file.Read(buff); err != nil {
-		return c.Status(422).JSON(types.Error{
-			Error: "Không thể upload được ảnh",
-		})
-	}
-
-	content_type := http.DetectContentType(buff)
-
-	if content_type != "image/jpeg" && content_type != "image/png" {
+	if !helpers.ValidateIsImage(file_header) {
 		return c.Status(422).JSON(types.Error{
 			Error: "Sai định dạng ảnh",
 		})

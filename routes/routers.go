@@ -63,6 +63,7 @@ func SetupRouter() *fiber.App {
 		api_v2_admin.Get("/users", admin.GetUsers)
 		api_v2_admin.Post("/users", admin.CreateUser)
 		api_v2_admin.Put("/users", admin.UpdateUser)
+		api_v2_admin.Post("/users/:id/avatar", admin.UploadUserAvatar)
 		api_v2_admin.Delete("/users/:id", admin.DeleteUser)
 	}
 

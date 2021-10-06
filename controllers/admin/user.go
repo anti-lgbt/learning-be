@@ -1,6 +1,8 @@
 package admin
 
 import (
+	"database/sql"
+	"fmt"
 	"time"
 
 	"github.com/anti-lgbt/learning-be/config"
@@ -138,6 +140,27 @@ func CreateUser(c *fiber.Ctx) error {
 		Role:     params.Role,
 	}
 
+	avatar, err := c.FormFile("avatar")
+	if err == nil {
+		if !helpers.ValidateIsImage(avatar) {
+			return c.Status(422).JSON(types.Error{
+				Error: "Sai định dạng ảnh",
+			})
+		}
+
+		avatar_path := fmt.Sprintf("./uploads/%s", avatar.Filename)
+		if err := c.SaveFile(avatar, avatar_path); err != nil {
+			return c.Status(422).JSON(types.Error{
+				Error: "Không thể upload được ảnh",
+			})
+		}
+
+		user.Avatar = sql.NullString{
+			String: avatar_path,
+			Valid:  true,
+		}
+	}
+
 	config.DataBase.Create(&user)
 
 	return c.Status(201).JSON(userToEntity(user))
@@ -181,6 +204,49 @@ func UpdateUser(c *fiber.Ctx) error {
 	config.DataBase.Save(&user)
 
 	return c.Status(200).JSON(userToEntity(user))
+}
+
+func UploadUserAvatar(c *fiber.Ctx) error {
+	id, err := c.ParamsInt("id")
+	if err != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: "Không tìm thấy user",
+		})
+	}
+
+	var user *models.User
+	if result := config.DataBase.First(&user, id); result.Error != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: "Không tìm thấy user",
+		})
+	}
+
+	avatar, err := c.FormFile("avatar")
+	if err != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: "Không xác định được hình ảnh",
+		})
+	}
+
+	if !helpers.ValidateIsImage(avatar) {
+		return c.Status(422).JSON(types.Error{
+			Error: "Sai định dạng ảnh",
+		})
+	}
+
+	avatar_path := fmt.Sprintf("./uploads/%s", avatar.Filename)
+	if err := c.SaveFile(avatar, avatar_path); err != nil {
+		return c.Status(422).JSON(types.Error{
+			Error: "Không thể upload được ảnh",
+		})
+	}
+
+	user.Avatar = sql.NullString{
+		String: avatar_path,
+		Valid:  true,
+	}
+
+	return c.Status(200).JSON(200)
 }
 
 func DeleteUser(c *fiber.Ctx) error {
