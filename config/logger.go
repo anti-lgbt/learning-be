@@ -33,6 +33,6 @@ func NewLoggerService() {
 	}
 
 	Logger = log.WithFields(log.Fields{
-		"Service": "Finex",
+		"Service": "Learning",
 	})
 }
