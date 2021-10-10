@@ -14,7 +14,7 @@ type ProductStatistic struct {
 func GetProductStatistics(c *fiber.Ctx) error {
 	var product_statistic *ProductStatistic
 
-	config.DataBase.Select("product_type_id, count(product_type_id) as count").Group("product_type_id").Find(&product_statistic)
+	config.DataBase.Model(&models.Product{}).Select("product_type_id, count(product_type_id) as count").Group("product_type_id").Find(&product_statistic)
 
 	return c.Status(200).JSON(product_statistic)
 }
