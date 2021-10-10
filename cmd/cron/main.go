@@ -9,6 +9,11 @@ import (
 )
 
 func main() {
+	if err := config.InitializeConfig(); err != nil {
+		config.Logger.Error(err.Error())
+		return
+	}
+
 	config.DataBase.AutoMigrate(&models.User{}, &models.ProductType{}, &models.Product{}, &models.Comment{}, &models.CommentStatistic{})
 
 	s := gocron.NewScheduler()
@@ -34,8 +39,8 @@ func release_comment_statistics() {
 	release_date, _ := time.Parse("2006-01-02", yesterday)
 
 	release := &models.CommentStatistic{
-		Count:        count.Count,
-		ReferralDate: release_date,
+		Count:       count.Count,
+		ReleaseDate: release_date,
 	}
 
 	config.DataBase.Create(&release)
