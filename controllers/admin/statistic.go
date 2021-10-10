@@ -12,7 +12,7 @@ type ProductStatistic struct {
 }
 
 func GetProductStatistics(c *fiber.Ctx) error {
-	var product_statistic *ProductStatistic
+	var product_statistic []*ProductStatistic
 
 	config.DataBase.Model(&models.Product{}).Select("product_type_id, count(product_type_id) as count").Group("product_type_id").Find(&product_statistic)
 
