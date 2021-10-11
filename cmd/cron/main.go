@@ -34,7 +34,7 @@ func release_comment_statistics() {
 		Model(&models.Comment{}).
 		Select("COUNT(*) AS count").
 		Group("DATE(\"created_at\")").
-		Having("DATE(\"created_at\") = ?", yesterday).First(&count)
+		Having("DATE(\"created_at\") = ?", yesterday).Scan(&count)
 
 	release_date, _ := time.Parse("2006-01-02", yesterday)
 
