@@ -21,14 +21,10 @@ func main() {
 	<-s.Start()
 }
 
-type Count struct {
-	Count uint64
-}
-
 func release_comment_statistics() {
 	yesterday := time.Now().AddDate(0, 0, -1).Format("2006-01-02")
 
-	var count *Count
+	var count uint64
 
 	config.DataBase.
 		Model(&models.Comment{}).
@@ -39,7 +35,7 @@ func release_comment_statistics() {
 	release_date, _ := time.Parse("2006-01-02", yesterday)
 
 	release := &models.CommentStatistic{
-		Count:       count.Count,
+		Count:       count,
 		ReleaseDate: release_date,
 	}
 
