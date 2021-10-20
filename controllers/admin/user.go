@@ -13,15 +13,20 @@ import (
 	"github.com/anti-lgbt/learning-be/types"
 	"github.com/creasty/defaults"
 	"github.com/gofiber/fiber/v2"
+	"github.com/volatiletech/null"
 )
 
 func userToEntity(user *models.User) entities.User {
 	return entities.User{
-		ID:        user.ID,
-		Email:     user.Email,
-		FullName:  user.FullName,
-		State:     user.State,
-		Role:      user.Role,
+		ID:       user.ID,
+		Email:    user.Email,
+		FullName: user.FullName,
+		State:    user.State,
+		Role:     user.Role,
+		ReferralID: null.Int64{
+			Int64: user.ReferralID.Int64,
+			Valid: user.ReferralID.Valid,
+		},
 		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,
 	}
