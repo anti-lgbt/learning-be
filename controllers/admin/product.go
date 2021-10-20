@@ -36,6 +36,7 @@ func productTypeToEntity(product_type *models.ProductType) entities.ProductType 
 	return entities.ProductType{
 		ID:        product_type.ID,
 		Name:      product_type.Name,
+		State:     product_type.State,
 		CreatedAt: product_type.CreatedAt,
 		UpdatedAt: product_type.UpdatedAt,
 	}
