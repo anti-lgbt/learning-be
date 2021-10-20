@@ -343,7 +343,8 @@ func CreateProductType(c *fiber.Ctx) error {
 	}
 
 	product_type = &models.ProductType{
-		Name: params.Name,
+		Name:  params.Name,
+		State: params.State,
 	}
 
 	if result := config.DataBase.Create(&product_type); result.Error != nil {
@@ -377,6 +378,7 @@ func UpdateProductType(c *fiber.Ctx) error {
 	}
 
 	product_type.Name = params.Name
+	product_type.State = params.State
 
 	config.DataBase.Save(&product_type)
 

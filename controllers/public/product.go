@@ -34,26 +34,30 @@ func GetProducts(c *fiber.Ctx) error {
 		})
 	}
 
-	tx := config.DataBase.Offset(params.Page*params.Limit - params.Limit).Limit(params.Limit)
+	tx := config.DataBase.
+		Offset(params.Page*params.Limit-params.Limit).
+		Limit(params.Limit).
+		Joins("JOIN product_types ON product_types.id = products.product_type_id").
+		Where("product_types.state = ?", "active")
 
 	if len(params.OrderBy) > 0 {
-		tx = tx.Order(params.OrderBy + " " + string(params.Ordering))
+		tx = tx.Order("products." + params.OrderBy + " " + string(params.Ordering))
 	}
 
 	if params.Discounting {
-		tx = tx.Where("discount_percentage > 0")
+		tx = tx.Where("products.discount_percentage > 0")
 	}
 
 	if params.Special {
-		tx = tx.Where("special = true")
+		tx = tx.Where("products.special = true")
 	}
 
 	if len(params.Type) > 0 {
-		tx = tx.Where("product_type_id IN (SELECT \"id\" FROM \"product_types\" WHERE \"name\" LIKE ?)", "%"+params.Type+"%")
+		tx = tx.Where("products.product_type_id IN (SELECT \"id\" FROM \"product_types\" WHERE \"name\" LIKE ?)", "%"+params.Type+"%")
 	}
 
 	if len(params.Name) > 0 {
-		tx = tx.Where("LOWER(name) LIKE ?", "%"+strings.ToLower(params.Name)+"%")
+		tx = tx.Where("LOWER(products.name) LIKE ?", "%"+strings.ToLower(params.Name)+"%")
 	}
 
 	var products []*models.Product

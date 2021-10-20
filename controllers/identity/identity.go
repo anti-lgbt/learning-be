@@ -23,7 +23,8 @@ type LoginPayload struct {
 }
 
 type RegisterPayload struct {
-	FullName string `json:"full_name" form:"full_name" validate:"required"`
+	FullName   string `json:"full_name" form:"full_name" validate:"required"`
+	ReferralID uint64 `json:"referral_id" form:"referral_id"`
 	AuthPayload
 }
 
@@ -105,6 +106,17 @@ func Register(c *fiber.Ctx) error {
 		Email:    params.Email,
 		Password: hashed,
 		FullName: params.FullName,
+	}
+
+	if params.ReferralID > 0 {
+		var ref_user *models.User
+		if result := config.DataBase.First(&ref_user, params.ReferralID); result.Error != nil {
+			user.ReferralID = params.ReferralID
+		} else {
+			return c.Status(422).JSON(types.Error{
+				Error: "Người giới thiệu không tồn tại",
+			})
+		}
 	}
 
 	if result := config.DataBase.Create(&user); result.Error != nil {

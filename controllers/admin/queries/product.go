@@ -26,6 +26,7 @@ func (p ProductPayload) DiscountPercentageValidator(val decimal.Decimal) bool {
 }
 
 type ProductTypePayload struct {
-	ID   uint64 `json:"id" form:"id" validate:"uint"`
-	Name string `json:"name" form:"name" validate:"required"`
+	ID    uint64 `json:"id" form:"id" validate:"uint"`
+	Name  string `json:"name" form:"name" validate:"required"`
+	State string `json:"state" form:"state" validate:"required"`
 }
