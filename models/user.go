@@ -18,7 +18,7 @@ type User struct {
 	Avatar     sql.NullString  `gorm:"type:character varying(255)"`
 	State      types.UserState `gorm:"type:character varying(10);not null;index;default:active"`
 	Role       types.UserRole  `gorm:"type:character varying(10);not null;index;default:member"`
-	ReferralID uint64          `gorm:"type:bigint;index"`
+	ReferralID sql.NullInt64   `gorm:"type:bigint;index"`
 	CreatedAt  time.Time       `gorm:"type:timestamp(0);not null;index"`
 	UpdatedAt  time.Time       `gorm:"type:timestamp(0);not null;index"`
 	Comments   []*Comment      `gorm:"constraint:OnDelete:CASCADE"`

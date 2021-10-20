@@ -144,6 +144,20 @@ func CreateUser(c *fiber.Ctx) error {
 		Role:     params.Role,
 	}
 
+	if params.ReferralID.Valid {
+		var ref_user *models.User
+		if result := config.DataBase.First(&ref_user, params.ReferralID.Int64); result.Error != nil {
+			return c.Status(422).JSON(types.Error{
+				Error: "Người giới thiệu không tồn tại",
+			})
+		} else {
+			user.ReferralID = sql.NullInt64{
+				Int64: params.ReferralID.Int64,
+				Valid: true,
+			}
+		}
+	}
+
 	avatar, err := c.FormFile("avatar")
 	if err == nil {
 		if !helpers.ValidateIsImage(avatar) {
@@ -204,6 +218,24 @@ func UpdateUser(c *fiber.Ctx) error {
 	user.FullName = params.FullName
 	user.State = params.State
 	user.Role = params.Role
+
+	if params.ReferralID.Valid {
+		var ref_user *models.User
+		if result := config.DataBase.First(&ref_user, params.ReferralID.Int64); result.Error != nil {
+			return c.Status(422).JSON(types.Error{
+				Error: "Người giới thiệu không tồn tại",
+			})
+		} else {
+			user.ReferralID = sql.NullInt64{
+				Int64: params.ReferralID.Int64,
+				Valid: true,
+			}
+		}
+	} else {
+		user.ReferralID = sql.NullInt64{
+			Valid: false,
+		}
+	}
 
 	config.DataBase.Save(&user)
 

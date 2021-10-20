@@ -1,6 +1,7 @@
 package identity
 
 import (
+	"database/sql"
 	"fmt"
 	"math/rand"
 	"time"
@@ -11,6 +12,7 @@ import (
 	"github.com/anti-lgbt/learning-be/services"
 	"github.com/anti-lgbt/learning-be/types"
 	"github.com/gofiber/fiber/v2"
+	"github.com/volatiletech/null"
 )
 
 type AuthPayload struct {
@@ -23,8 +25,8 @@ type LoginPayload struct {
 }
 
 type RegisterPayload struct {
-	FullName   string `json:"full_name" form:"full_name" validate:"required"`
-	ReferralID uint64 `json:"referral_id" form:"referral_id"`
+	FullName   string     `json:"full_name" form:"full_name" validate:"required"`
+	ReferralID null.Int64 `json:"referral_id" form:"referral_id"`
 	AuthPayload
 }
 
@@ -108,14 +110,17 @@ func Register(c *fiber.Ctx) error {
 		FullName: params.FullName,
 	}
 
-	if params.ReferralID > 0 {
+	if params.ReferralID.Valid {
 		var ref_user *models.User
-		if result := config.DataBase.First(&ref_user, params.ReferralID); result.Error != nil {
+		if result := config.DataBase.First(&ref_user, params.ReferralID.Int64); result.Error != nil {
 			return c.Status(422).JSON(types.Error{
 				Error: "Người giới thiệu không tồn tại",
 			})
 		} else {
-			user.ReferralID = params.ReferralID
+			user.ReferralID = sql.NullInt64{
+				Int64: params.ReferralID.Int64,
+				Valid: true,
+			}
 		}
 	}
 
