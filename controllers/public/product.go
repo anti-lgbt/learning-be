@@ -140,7 +140,7 @@ func GetProductImage(c *fiber.Ctx) error {
 func GetProductTypes(c *fiber.Ctx) error {
 	var product_types []*models.ProductType
 
-	config.DataBase.Find(&product_types)
+	config.DataBase.Where("state = ?", "active").Find(&product_types)
 
 	product_type_entities := make([]*entities.ProductType, 0)
 	for _, product_type := range product_types {
