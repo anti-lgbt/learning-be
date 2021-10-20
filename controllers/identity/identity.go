@@ -111,11 +111,11 @@ func Register(c *fiber.Ctx) error {
 	if params.ReferralID > 0 {
 		var ref_user *models.User
 		if result := config.DataBase.First(&ref_user, params.ReferralID); result.Error != nil {
-			user.ReferralID = params.ReferralID
-		} else {
 			return c.Status(422).JSON(types.Error{
 				Error: "Người giới thiệu không tồn tại",
 			})
+		} else {
+			user.ReferralID = params.ReferralID
 		}
 	}
 
